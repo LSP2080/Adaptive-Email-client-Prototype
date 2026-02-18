@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base Email Client</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="email-client" id="emailClient">
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo">
+                <i class="fas fa-envelope"></i>
+                <span>MailBox</span>
+            </div>
+        </div>
+
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search emails..." id="searchInput">
+        </div>
+
+        <div class="header-right">
+            <button class="btn-new-email" id="newEmailBtn">
+                <i class="fas fa-pen"></i>
+                <span>Compose</span>
+            </button>
+            <div class="user-avatar">
+                <div class="avatar-placeholder">JD</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <nav class="folder-nav">
+                <ul id="folderList">
+                    <!-- Dynamically populated by JavaScript -->
+                </ul>
+            </nav>
+
+            <div class="folders-section">
+                <h3>Labels</h3>
+                <ul id="labelsList">
+                    <li data-label="Work"><i class="fas fa-circle" style="color: #007bff;"></i> Work</li>
+                    <li data-label="Personal"><i class="fas fa-circle" style="color: #28a745;"></i> Personal</li>
+                    <li data-label="Important"><i class="fas fa-circle" style="color: #ffc107;"></i> Important</li>
+                    <li data-label="Meetings"><i class="fas fa-circle" style="color: #dc3545;"></i> Meetings</li>
+                </ul>
+            </div>
+
+            <div class="user-info">
+                <div class="avatar-placeholder">JD</div>
+                <div class="user-details">
+                    <strong>John Doe</strong>
+                    <small>john@example.com</small>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Email List -->
+        <section class="email-list-section">
+            <div class="email-list-header">
+                <div class="list-controls">
+                    <input type="checkbox" id="selectAll">
+                    <button class="btn-icon" title="Refresh" id="refreshBtn">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                    <button class="btn-icon" title="Archive">
+                        <i class="fas fa-archive"></i>
+                    </button>
+                    <button class="btn-icon" title="Report spam">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </button>
+                    <button class="btn-icon" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="pagination">
+                    <span id="paginationInfo">Loading...</span>
+                    <button class="btn-icon" id="prevPage"><i class="fas fa-chevron-left"></i></button>
+                    <button class="btn-icon" id="nextPage"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+
+            <div class="email-list" id="emailList">
+                <!-- Dynamically populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Email View -->
+        <section class="email-view-section" id="emailViewSection">
+            <div class="email-view-header">
+                <button class="btn-close-view hidden-desktop" id="closeEmailView">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="email-view-actions">
+                    <button class="btn-icon" title="Reply">
+                        <i class="fas fa-reply"></i>
+                    </button>
+                    <button class="btn-icon" title="Reply All">
+                        <i class="fas fa-reply-all"></i>
+                    </button>
+                    <button class="btn-icon" title="Forward">
+                        <i class="fas fa-share"></i>
+                    </button>
+                    <button class="btn-icon" title="Print">
+                        <i class="fas fa-print"></i>
+                    </button>
+                    <button class="btn-icon" title="More">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="email-view-content" id="emailViewContent">
+                <div class="no-email-selected">
+                    <i class="fas fa-envelope-open-text"></i>
+                    <h3>No Email Selected</h3>
+                    <p>Select an email from the list to read it here</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Compose Modal -->
+    <div class="compose-modal" id="composeModal">
+        <div class="compose-header">
+            <h3>New Message</h3>
+            <button class="btn-close" id="closeCompose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="compose-body">
+            <div class="form-group">
+                <input type="text" placeholder="To" id="composeTo">
+            </div>
+            <div class="form-group">
+                <input type="text" placeholder="Subject" id="composeSubject">
+            </div>
+            <div class="form-group">
+                <textarea placeholder="Type your message here..." id="composeBody" rows="10"></textarea>
+            </div>
+        </div>
+        <div class="compose-footer">
+            <button class="btn-primary" id="sendEmail">
+                <i class="fas fa-paper-plane"></i> Send
+            </button>
+            <button class="btn-icon" title="Attach file" id="attachFile">
+                <i class="fas fa-paperclip"></i>
+            </button>
+            <button class="btn-icon" title="Formatting">
+                <i class="fas fa-font"></i>
+            </button>
+            <button class="btn-icon" title="Save Draft" id="saveDraft">
+                <i class="fas fa-save"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

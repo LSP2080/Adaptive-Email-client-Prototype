@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dual-AI Email Client</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="email-client" id="emailClient">
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo">
+                <i class="fas fa-envelope"></i>
+                <span>MailBox</span>
+            </div>
+        </div>
+
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search emails..." id="searchInput">
+        </div>
+
+        <div class="header-right">
+            <button class="btn-new-email" id="newEmailBtn">
+                <i class="fas fa-pen"></i>
+                <span>Compose</span>
+            </button>
+            <!-- Settings AI Toggle -->
+            <button class="btn-settings-ai" id="settingsAiToggle" title="AI Settings">
+                <i class="fas fa-robot"></i>
+            </button>
+            <!-- Base AI Status Indicator -->
+            <div class="ai-status" id="aiStatus" title="Base AI Status">
+                <span class="ai-status-dot"></span>
+                <span class="ai-status-text">AI Idle</span>
+            </div>
+            <div class="user-avatar">
+                <div class="avatar-placeholder">JD</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <nav class="folder-nav">
+                <ul id="folderList">
+                    <!-- Dynamically populated by JavaScript -->
+                </ul>
+            </nav>
+
+            <div class="folders-section">
+                <h3>Labels</h3>
+                <ul id="labelsList">
+                    <li data-label="Work"><i class="fas fa-circle" style="color: #007bff;"></i> Work</li>
+                    <li data-label="Personal"><i class="fas fa-circle" style="color: #28a745;"></i> Personal</li>
+                    <li data-label="Important"><i class="fas fa-circle" style="color: #ffc107;"></i> Important</li>
+                    <li data-label="Meetings"><i class="fas fa-circle" style="color: #dc3545;"></i> Meetings</li>
+                </ul>
+            </div>
+
+            <div class="user-info">
+                <div class="avatar-placeholder">JD</div>
+                <div class="user-details">
+                    <strong>John Doe</strong>
+                    <small>john@example.com</small>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Email List -->
+        <section class="email-list-section">
+            <div class="email-list-header">
+                <div class="list-controls">
+                    <input type="checkbox" id="selectAll">
+                    <button class="btn-icon" title="Refresh" id="refreshBtn">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                    <button class="btn-icon" title="Archive">
+                        <i class="fas fa-archive"></i>
+                    </button>
+                    <button class="btn-icon" title="Report spam">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </button>
+                    <button class="btn-icon" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="pagination">
+                    <span id="paginationInfo">Loading...</span>
+                    <button class="btn-icon" id="prevPage"><i class="fas fa-chevron-left"></i></button>
+                    <button class="btn-icon" id="nextPage"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+
+            <div class="email-list" id="emailList">
+                <!-- Dynamically populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Email View -->
+        <section class="email-view-section" id="emailViewSection">
+            <div class="email-view-header">
+                <button class="btn-close-view hidden-desktop" id="closeEmailView">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="email-view-actions">
+                    <button class="btn-icon" title="Reply">
+                        <i class="fas fa-reply"></i>
+                    </button>
+                    <button class="btn-icon" title="Reply All">
+                        <i class="fas fa-reply-all"></i>
+                    </button>
+                    <button class="btn-icon" title="Forward">
+                        <i class="fas fa-share"></i>
+                    </button>
+                    <button class="btn-icon" title="Print">
+                        <i class="fas fa-print"></i>
+                    </button>
+                    <button class="btn-icon" title="More">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="email-view-content" id="emailViewContent">
+                <div class="no-email-selected">
+                    <i class="fas fa-envelope-open-text"></i>
+                    <h3>No Email Selected</h3>
+                    <p>Select an email from the list to read it here</p>
+                </div>
+            </div>
+
+            <!-- Dynamic Component Slot: rendered by AI -->
+            <div id="componentSlot"></div>
+        </section>
+    </div>
+
+    <!-- Compose Modal -->
+    <div class="compose-modal" id="composeModal">
+        <div class="compose-header">
+            <h3>New Message</h3>
+            <button class="btn-close" id="closeCompose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="compose-body">
+            <div class="form-group">
+                <input type="text" placeholder="To" id="composeTo">
+            </div>
+            <div class="form-group">
+                <input type="text" placeholder="Subject" id="composeSubject">
+            </div>
+            <div class="form-group">
+                <textarea placeholder="Type your message here..." id="composeBody" rows="10"></textarea>
+            </div>
+        </div>
+        <div class="compose-footer">
+            <button class="btn-primary" id="sendEmail">
+                <i class="fas fa-paper-plane"></i> Send
+            </button>
+            <button class="btn-icon" title="Attach file" id="attachFile">
+                <i class="fas fa-paperclip"></i>
+            </button>
+            <button class="btn-icon" title="Formatting">
+                <i class="fas fa-font"></i>
+            </button>
+            <button class="btn-icon" title="Save Draft" id="saveDraft">
+                <i class="fas fa-save"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- ========== Settings AI Panel ========== -->
+    <div class="settings-ai-panel" id="settingsAiPanel">
+        <div class="settings-ai-header">
+            <div class="settings-ai-title">
+                <i class="fas fa-sliders-h"></i>
+                <span>Settings AI</span>
+            </div>
+            <button class="btn-close-settings" id="closeSettingsAi">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="settings-ai-body">
+            <!-- Active Rules Display -->
+            <div class="active-rules" id="activeRules">
+                <div class="rules-header">
+                    <span>Active Rules</span>
+                    <button class="btn-clear-rules" id="clearRules" title="Clear all rules">
+                        <i class="fas fa-eraser"></i>
+                    </button>
+                </div>
+                <div class="rules-list" id="rulesList">
+                    <div class="no-rules">No active rules. Tell the AI your preferences below.</div>
+                </div>
+            </div>
+
+            <!-- Quick Presets -->
+            <div class="quick-presets">
+                <span class="presets-label">Quick presets:</span>
+                <div class="presets-grid">
+                    <button class="preset-btn" data-preset="minimal">
+                        <i class="fas fa-compress-alt"></i> Minimal
+                    </button>
+                    <button class="preset-btn" data-preset="focused">
+                        <i class="fas fa-bullseye"></i> Focused
+                    </button>
+                    <button class="preset-btn" data-preset="detailed">
+                        <i class="fas fa-expand-alt"></i> Detailed
+                    </button>
+                    <button class="preset-btn" data-preset="relaxed">
+                        <i class="fas fa-couch"></i> Relaxed
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat Messages -->
+            <div class="settings-ai-messages" id="settingsAiMessages">
+                <div class="ai-message">
+                    <div class="ai-message-avatar"><i class="fas fa-robot"></i></div>
+                    <div class="ai-message-content">
+                        Hi! I'm your Settings AI. Tell me how you'd like your email experience. For example:
+                        <ul>
+                            <li>"I want a simple, clean interface"</li>
+                            <li>"Show me more details for each email"</li>
+                            <li>"I get distracted easily, help me focus"</li>
+                            <li>"Make the text bigger, I have trouble reading"</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Input -->
+        <div class="settings-ai-input">
+            <input type="text" id="settingsAiInput" placeholder="Tell me your preferences...">
+            <button id="settingsAiSend">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- ========== Adaptation Notification ========== -->
+    <div class="adaptation-notification" id="adaptationNotification">
+        <div class="notification-content">
+            <i class="fas fa-magic"></i>
+            <span id="adaptationMessage">Interface adapted</span>
+        </div>
+        <div class="notification-actions">
+            <button class="btn-notification" id="undoAdaptation" title="Undo last change">
+                <i class="fas fa-undo"></i> Undo
+            </button>
+            <button class="btn-notification" id="redoAdaptation" title="Redo last change">
+                <i class="fas fa-redo"></i> Redo
+            </button>
+            <button class="btn-notification accept" id="acceptAdaptation">
+                <i class="fas fa-check"></i> Accept
+            </button>
+        </div>
+    </div>
+
+    <!-- ========== Reset Interface Button ========== -->
+    <button class="btn-reset-interface" id="resetInterface" title="Reset all AI adaptations">
+        <i class="fas fa-sync-alt"></i>
+        <span>Reset Interface</span>
+    </button>
+
+    <!-- ========== AI Debug Panel (for development) ========== -->
+    <div class="debug-panel" id="debugPanel">
+        <div class="debug-header">
+            <span>AI Debug</span>
+            <button id="toggleDebug"><i class="fas fa-bug"></i></button>
+        </div>
+        <div class="debug-content" id="debugContent">
+            <div class="debug-section">
+                <h4>Settings AI Rules</h4>
+                <pre id="debugSettingsRules">{}</pre>
+            </div>
+            <div class="debug-section">
+                <h4>Behavioral Metrics</h4>
+                <pre id="debugMetrics">{}</pre>
+            </div>
+            <div class="debug-section">
+                <h4>Base AI Decision</h4>
+                <pre id="debugDecision">{}</pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="ai-config.js"></script>
+<script src="settings-ai.js"></script>
+<script src="base-ai.js"></script>
+<script src="renderer.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
